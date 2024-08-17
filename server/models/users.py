@@ -3,6 +3,8 @@ from sqlalchemy.orm import validates
 from sqlalchemy.ext.hybrid import hybrid_property
 from config import db, bcrypt
 
+print('Testing')
+
 class User(db.Model, SerializerMixin):
 
     __tablename__ = 'users'
