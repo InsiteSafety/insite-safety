@@ -3,5 +3,5 @@ from sqlalchemy.orm import validates
 
 from config import db
 
-from models.users import User
+from server.models.user import User
     
