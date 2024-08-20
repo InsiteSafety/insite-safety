@@ -4,6 +4,7 @@ The maximum number of characters set for a name attribute of a model.
 """
 
 MAX_EMAIL_LENGTH = 254
+MAX_INPUT_LENGTH = 260
 """
 The maximum number of characters set for an email attribute of a model.
 """

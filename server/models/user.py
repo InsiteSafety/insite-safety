@@ -23,7 +23,7 @@ class User(db.Model, SerializerMixin):
     # Foreign Keys
     # user_role = db.Column(db.String)
     # company
-    # submitted_incidents 
+    # incidents 
 
     _password_hash = db.Column(db.String, nullable=False)
     
