@@ -10,6 +10,9 @@ from model_helpers import MAX_NAME_LENGTH, validate_model_input_string, MAX_INPU
 
 
 class Incident(db.Model, SerializerMixin):
+    """
+    TODO
+    """
 
     __tablename__ = 'incidents'
 
@@ -99,7 +102,7 @@ class Incident(db.Model, SerializerMixin):
         """
 
         if not isinstance(value, datetime):
-            raise TypeError(f'{key} must be a datetiem object')
+            raise TypeError(f'{key} must be a datetime object')
         now = datetime.now() 
         if value > now: 
             raise ValueError(f'{key} cannot be set in the future')
