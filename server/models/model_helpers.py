@@ -4,9 +4,14 @@ The maximum number of characters set for a name attribute of a model.
 """
 
 MAX_EMAIL_LENGTH = 254
-MAX_INPUT_LENGTH = 260
 """
 The maximum number of characters set for an email attribute of a model.
+"""
+
+MAX_INPUT_LENGTH = 260
+"""
+The maximum number of characters set for a string-type model attribute that is
+not for a name or email.
 """
 
 def validate_model_input_string(key, name, max_length):
