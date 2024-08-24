@@ -1,5 +1,5 @@
 from sqlalchemy_serializer import SerializerMixin
-from sqlalchemy.orm import validates
+from sqlalchemy.orm import validates, relationship
 from sqlalchemy.ext.hybrid import hybrid_property
 from config import db, bcrypt
 from server.models.model_helpers import MAX_NAME_LENGTH, MAX_EMAIL_LENGTH, validate_model_input_string
@@ -21,9 +21,9 @@ class User(db.Model, SerializerMixin):
     email = db.Column(db.String(MAX_EMAIL_LENGTH), nullable=False)
 
     # Foreign Keys
-    # user_role = db.Column(db.String)
-    # company
-    # incidents 
+    # company - one to one 
+    company = relationship('Company', back_populates='user_id', uselist=False)
+    # incidents - one to many
 
     _password_hash = db.Column(db.String, nullable=False)
     
