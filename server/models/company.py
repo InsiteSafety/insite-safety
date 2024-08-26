@@ -1,10 +1,10 @@
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.orm import validates, relationship
 from sqlalchemy import ForeignKey
-from models.user import user, users
+from models.user import User
 
 from config import db
-from model_helpers import MAX_NAME_LENGTH, MAX_INPUT_LENGTH, validate_model_input_string
+from models.model_helpers import MAX_NAME_LENGTH, MAX_INPUT_LENGTH, validate_model_input_string
 
 class Company(db.Model, SerializerMixin):
     """
