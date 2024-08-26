@@ -1,6 +1,9 @@
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.orm import validates
 from datetime import datetime
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 
 from config import db
 from models.model_helpers import MAX_NAME_LENGTH, validate_model_input_string, MAX_INPUT_LENGTH
@@ -32,6 +35,16 @@ class Incident(db.Model, SerializerMixin):
     first_aid_details = db.Column(db.String(MAX_INPUT_LENGTH), nullable=False)
     recovery_status = db.Column(db.String(MAX_INPUT_LENGTH), nullable=False)
     pain_level = db.Column(db.Integer())
+    
+    # Foreign Keys
+    # user_id
+
+    user_id = db.Column(db.Integer, ForeignKey('users.id'))
+    user = relationship('User', back_populates='users')
+    
+    # employee_id
+    # medical records 
+    # company_id
     # Pain level constrant disallowing more than two characters. Validations will ensure users can only choose vlaues between 0 and 10. 
 
     @validates('injury_description', 'mechanism_of_injury', 'body_part_injured', 'symptoms', 'incident_location', 'first_aid_details', 'recovery_status')
@@ -121,8 +134,3 @@ class Incident(db.Model, SerializerMixin):
 
 
 
-    # Foreign Keys
-    # user_id
-    # employee_id
-    # medical records 
-    # company_id
