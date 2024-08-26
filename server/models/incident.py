@@ -3,7 +3,7 @@ from sqlalchemy.orm import validates
 from datetime import datetime
 
 from config import db
-from model_helpers import MAX_NAME_LENGTH, validate_model_input_string, MAX_INPUT_LENGTH
+from models.model_helpers import MAX_NAME_LENGTH, validate_model_input_string, MAX_INPUT_LENGTH
 
 # Validations To Do
 # incident_date, incident_time, incident_report_date, incident_report_time
@@ -18,10 +18,10 @@ class Incident(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     injury_description = db.Column(db.String(MAX_INPUT_LENGTH))
-    incident_date = db.Column(db.datetime, nullable=False)
-    incident_time = db.Column(db.datetime, nullable=False)
-    incident_report_date = db.Column(db.datetime, nullable=False)
-    incident_report_time = db.Column(db.datetime, nullable=False)
+    incident_date = db.Column(db.DateTime, nullable=False)
+    incident_time = db.Column(db.DateTime, nullable=False)
+    incident_report_date = db.Column(db.DateTime, nullable=False)
+    incident_report_time = db.Column(db.DateTime, nullable=False)
     mechansim_of_injury = db.Column(db.String(MAX_INPUT_LENGTH), nullable=False)
     body_part_injured = db.Column(db.String(MAX_INPUT_LENGTH), nullable=False)
     symptoms = db.Column(db.String(MAX_INPUT_LENGTH), nullable=False)
@@ -31,7 +31,7 @@ class Incident(db.Model, SerializerMixin):
     first_aid_given = db.Column(db.Boolean, nullable=False)
     first_aid_details = db.Column(db.String(MAX_INPUT_LENGTH), nullable=False)
     recovery_status = db.Column(db.String(MAX_INPUT_LENGTH), nullable=False)
-    pain_level = db.Column(db.Integer(2))
+    pain_level = db.Column(db.Integer())
     # Pain level constrant disallowing more than two characters. Validations will ensure users can only choose vlaues between 0 and 10. 
 
     @validates('injury_description', 'mechanism_of_injury', 'body_part_injured', 'symptoms', 'incident_location', 'first_aid_details', 'recovery_status')
@@ -85,31 +85,31 @@ class Incident(db.Model, SerializerMixin):
         return value
     
     @validates('incident_date', 'incident_time', 'incident_report_date', 'incident_report_time')
-    def validate_datetime_fields(self, key, value):
+    def validate_DateTime_fields(self, key, value):
         """
-        Validates that datetime fields are not set in the future and that
-        the report datetime is after the incident datetime.
+        Validates that DateTime fields are not set in the future and that
+        the report DateTime is after the incident DateTime.
 
         Args:
             key (str): The attribute name being validated.
-            value (datetime): The value of the attribute.
+            value (DateTime): The value of the attribute.
 
         Returns:
-            datetime: The validated value.
+            DateTime: The validated value.
 
         Raises:
-            ValueError: If the datetime is in the future or if the report datetime precedes the incident datetime.
+            ValueError: If the DateTime is in the future or if the report DateTime precedes the incident DateTime.
         """
 
-        if not isinstance(value, datetime):
-            raise TypeError(f'{key} must be a datetime object')
-        now = datetime.now() 
+        if not isinstance(value, DateTime):
+            raise TypeError(f'{key} must be a DateTime object')
+        now = DateTime.now() 
         if value > now: 
             raise ValueError(f'{key} cannot be set in the future')
         if key.startswith('incident_report') and hasattr(self, 'incident_date'):
-            incident_datetime = getattr(self, 'incident_date')
-            if value <= incident_datetime:
-                raise ValueError('Report datetime must be after incident datetime')
+            incident_DateTime = getattr(self, 'incident_date')
+            if value <= incident_DateTime:
+                raise ValueError('Report DateTime must be after incident DateTime')
         return value
 
 
