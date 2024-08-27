@@ -19,7 +19,13 @@ class User(db.Model, SerializerMixin):
     last_name = db.Column(db.String(MAX_NAME_LENGTH), nullable=False)
     username = db.Column(db.String(MAX_NAME_LENGTH), nullable=False)
     email = db.Column(db.String(MAX_EMAIL_LENGTH), nullable=False)
+
+    # Foreign keys
+
+    # one to one 
     company = relationship('Company', back_populates='user_id', uselist=False)
+
+    # one to many
     incidents = relationship('Incident', back_populates='incident_id')
 
     _password_hash = db.Column(db.String, nullable=False)

@@ -36,13 +36,17 @@ class Incident(db.Model, SerializerMixin):
     recovery_status = db.Column(db.String(MAX_INPUT_LENGTH), nullable=False)
     pain_level = db.Column(db.Integer())
     
-    # Foreign Keys
-    # user_id
+    # Foreign Keys: 
+     
+    # user_id: one to many
 
     user_id = db.Column(db.Integer, ForeignKey('users.id'))
     user = relationship('User', back_populates='users')
     
-    # employee_id
+    # employee_id: one to many
+
+    employee_id = db.Column(db.Integer, ForeignKey('employees.id'))
+
     # medical records 
     # company_id
     # Pain level constrant disallowing more than two characters. Validations will ensure users can only choose vlaues between 0 and 10. 

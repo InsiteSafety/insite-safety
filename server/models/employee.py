@@ -1,5 +1,5 @@
 from sqlalchemy_serializer import SerializerMixin
-from sqlalchemy.orm import validates
+from sqlalchemy.orm import validates, relationship
 
 from config import db
 from models.model_helpers import *
@@ -18,7 +18,10 @@ class Employee(db.Model, SerializerMixin):
     position = db.Column(db.String(MAX_NAME_LENGTH), nullable=False)
     
     # Foreign Key
-    # incident_id
+
+    # incident_id: one to many
+    incidents = relationship("Incident", back_populates="employees")
+
     
     @validates('first_name', 'last_name', 'department', 'position')
     def validate_name(self, key, name):
