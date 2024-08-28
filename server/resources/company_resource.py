@@ -1,4 +1,4 @@
-from server.resources._dry_resource import DRYResource
+from resources._dry_resource import DRYResource
 from models.company import Company
 
 class Companies(DRYResource):
