@@ -22,6 +22,8 @@ class Employee(db.Model, SerializerMixin):
     # incident_id: one to many
     incidents = relationship("Incident", back_populates="employees")
 
+    # company: one to many
+
     
     @validates('first_name', 'last_name', 'department', 'position')
     def validate_name(self, key, name):

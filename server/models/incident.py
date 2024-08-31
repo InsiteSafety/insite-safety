@@ -23,8 +23,8 @@ class Incident(db.Model, SerializerMixin):
     injury_description = db.Column(db.String(MAX_INPUT_LENGTH))
     incident_date = db.Column(db.DateTime, nullable=False)
     incident_time = db.Column(db.DateTime, nullable=False)
-    incident_report_date = db.Column(db.DateTime, nullable=False)
-    incident_report_time = db.Column(db.DateTime, nullable=False)
+    report_date = db.Column(db.DateTime, nullable=False)
+    report_time = db.Column(db.DateTime, nullable=False)
     mechansim_of_injury = db.Column(db.String(MAX_INPUT_LENGTH), nullable=False)
     body_part_injured = db.Column(db.String(MAX_INPUT_LENGTH), nullable=False)
     symptoms = db.Column(db.String(MAX_INPUT_LENGTH), nullable=False)
@@ -54,7 +54,7 @@ class Incident(db.Model, SerializerMixin):
     @validates('injury_description', 'mechanism_of_injury', 'body_part_injured', 'symptoms', 'incident_location', 'first_aid_details', 'recovery_status')
     def validate_name(self, key, name):
         """
-        Validates that the injury_description', 'mechanism_of_injury', 'body_part_injured', 'symptoms', 'incident_location', 'first_aid_details', 'recovery_status' attributes are all non-empty strings that are at most 260 characters long.
+        Validates that the 'injury_description', 'mechanism_of_injury', 'body_part_injured', 'symptoms', 'incident_location', 'first_aid_details', 'recovery_status' attributes are all non-empty strings that are at most 260 characters long.
 
         Args:
             key (str): the attribute name.
@@ -101,7 +101,7 @@ class Incident(db.Model, SerializerMixin):
             raise ValueError(f'{key} must be between zero and ten')
         return value
     
-    @validates('incident_date', 'incident_time', 'incident_report_date', 'incident_report_time')
+    @validates('incident_date', 'incident_time', 'report_date', 'report_time')
     def validate_DateTime_fields(self, key, value):
         """
         Validates that DateTime fields are not set in the future and that
@@ -118,9 +118,9 @@ class Incident(db.Model, SerializerMixin):
             ValueError: If the DateTime is in the future or if the report DateTime precedes the incident DateTime.
         """
 
-        if not isinstance(value, DateTime):
+        if not isinstance(value, db.DateTime):
             raise TypeError(f'{key} must be a DateTime object')
-        now = DateTime.now() 
+        now = db.DateTime.now() 
         if value > now: 
             raise ValueError(f'{key} cannot be set in the future')
         if key.startswith('incident_report') and hasattr(self, 'incident_date'):
