@@ -121,15 +121,12 @@ class Incident(db.Model, SerializerMixin):
         if not isinstance(value, db.DateTime):
             raise TypeError(f'{key} must be a DateTime object')
         now = db.DateTime.now() 
-        if value > now: 
-            raise ValueError(f'{key} cannot be set in the future')
-        if key in ['incident_date','incident_time']:
+        if key in ['incident_date','incident_time', 'report_date', 'report_time']:
             if value > now:
-                raise ValueError(f"{key} cannot be set in the future")
-        elif key in ['report_date', 'report_time']:
-            if value <= now:
-                raise ValueError(f"{key} must be after the current time")
+                raise ValueError(f"{key} cannot be set in the future")  
         if key.startswith('report'):
+
+            # Creates a DateTime object that combines the report_time with a default date. 
             incident_datetime = self.incident_date + self.incident_time
             if key == 'report_date':
                 report_datetime = value + Time(0, 0, 0)

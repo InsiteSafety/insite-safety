@@ -1,7 +1,7 @@
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.orm import validates
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Time
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from config import db
@@ -63,12 +63,13 @@ class Near_miss(db.Model, SerializerMixin):
         if not isinstance(value, db.Datetime):
             raise TypeError(f'{key} must be a DateTime object')
         now = db.DateTime.now()
+
+
         if value > now:
             raise TypeError(f'{key} cannot be set in the future')
-        if key.startswith('report_date') and hasattr(self, 'near_miss_date'):
-            near_miss_DateTime = getattr(self, 'near_miss_date')
-            if value <= near_miss_DateTime:
-                raise ValueError('report DateTime must be after near_miss_DateTime')
-        return value
+        
+        if key.startswith('report'):
+            # Creates a DateTime object that combines the report_time with a default date. 
+            near_miss_datetime = value + Time(0, 0, 0)
 
 
