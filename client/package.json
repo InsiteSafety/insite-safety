@@ -10,11 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "inquirer": "^8.2.6",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.23.1",
-    "inquirer": "^8.2.6"
-
+    "react-router-dom": "^6.23.1"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
