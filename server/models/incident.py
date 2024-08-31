@@ -1,7 +1,7 @@
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.orm import validates
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Time
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -123,11 +123,24 @@ class Incident(db.Model, SerializerMixin):
         now = db.DateTime.now() 
         if value > now: 
             raise ValueError(f'{key} cannot be set in the future')
-        if key.startswith('incident_report') and hasattr(self, 'incident_date'):
-            incident_DateTime = getattr(self, 'incident_date')
-            if value <= incident_DateTime:
-                raise ValueError('Report DateTime must be after incident DateTime')
+        if key in ['incident_date','incident_time']:
+            if value > now:
+                raise ValueError(f"{key} cannot be set in the future")
+        elif key in ['report_date', 'report_time']:
+            if value <= now:
+                raise ValueError(f"{key} must be after the current time")
+        if key.startswith('report'):
+            incident_datetime = self.incident_date + self.incident_time
+            if key == 'report_date':
+                report_datetime = value + Time(0, 0, 0)
+            else:
+                report_datetime = value
+            if report_datetime <= incident_datetime:
+                raise ValueError("Report DateTime must be after incident DateTime")
         return value
+
+            
+
 
 
 

@@ -43,7 +43,7 @@ class Near_miss(db.Model, SerializerMixin):
         validate_model_input_string(key, name, MAX_INPUT_LENGTH)
         return name
     
-    @validates('report_date', 'report_time', 'near_miss_date', 'near_miss_time')
+    @validates('near_miss_date', 'near_miss_time', 'report_date', 'report_time')
     def validate_DateTime_fields(self, key, value):
         """
         Validates that DateTime fields are not set in the future and that
@@ -65,6 +65,10 @@ class Near_miss(db.Model, SerializerMixin):
         now = db.DateTime.now()
         if value > now:
             raise TypeError(f'{key} cannot be set in the future')
-        if key.startswith('report_date')
+        if key.startswith('report_date') and hasattr(self, 'near_miss_date'):
+            near_miss_DateTime = getattr(self, 'near_miss_date')
+            if value <= near_miss_DateTime:
+                raise ValueError('report DateTime must be after near_miss_DateTime')
+        return value
 
 
