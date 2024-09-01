@@ -19,8 +19,10 @@ class Company(db.Model, SerializerMixin):
     user = relationship("User", back_populates="companies")
     
     # Foreign Keys
-    # industry_id
-    # insection_id
+    # industry_id: 
+
+
+    # inspection_id?
     
     def __repr__(self):
         pass
