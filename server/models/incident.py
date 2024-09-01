@@ -6,7 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
 from config import db
-from models.model_helpers import MAX_NAME_LENGTH, validate_model_input_string, MAX_INPUT_LENGTH
+from models.model_helpers import MAX_NAME_LENGTH, validate_model_input_string, MAX_INPUT_LENGTH, validates_model_input_datetime
 
 # Validations To Do
 # incident_date, incident_time, incident_report_date, incident_report_time
@@ -117,23 +117,7 @@ class Incident(db.Model, SerializerMixin):
         Raises:
             ValueError: If the DateTime is in the future or if the report DateTime precedes the incident DateTime.
         """
-
-        if not isinstance(value, db.DateTime):
-            raise TypeError(f'{key} must be a DateTime object')
-        now = db.DateTime.now() 
-        if key in ['incident_date','incident_time', 'report_date', 'report_time']:
-            if value > now:
-                raise ValueError(f"{key} cannot be set in the future")  
-        if key.startswith('report'):
-
-            # Creates a DateTime object that combines the report_time with a default date. 
-            incident_datetime = self.incident_date + self.incident_time
-            if key == 'report_date':
-                report_datetime = value + Time(0, 0, 0)
-            else:
-                report_datetime = value
-            if report_datetime <= incident_datetime:
-                raise ValueError("Report DateTime must be after incident DateTime")
+        validates_model_input_datetime(self, key, value)
         return value
 
             

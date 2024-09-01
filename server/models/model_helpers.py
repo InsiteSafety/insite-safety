@@ -37,7 +37,7 @@ def validate_model_input_string(key, name, max_length):
     if len(name) > MAX_NAME_LENGTH:
         raise ValueError(f"{key.title()} field must be {max_length} characters or less.")
     
-def validates_model_input_datetime(key, value, name, self):
+def validates_model_input_datetime(key, value, self):
     if not isinstance(value, db.DateTime):
         raise TypeError(f"{key} must be a DateTime object")
     now = db.DateTime.now()

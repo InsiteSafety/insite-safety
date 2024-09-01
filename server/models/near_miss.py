@@ -5,7 +5,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, Time
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from config import db
-from models.model_helpers import MAX_NAME_LENGTH, MAX_INPUT_LENGTH, validate_model_input_string
+from models.model_helpers import MAX_NAME_LENGTH, MAX_INPUT_LENGTH, validate_model_input_string, validates_model_input_datetime
 
 class Near_miss(db.Model, SerializerMixin):
     """
@@ -27,7 +27,7 @@ class Near_miss(db.Model, SerializerMixin):
         # 2. root_cause_analysis_id (one rca to one near miss)
         # 3. corrective_action_id (many corrective actions to one near_miss)
 
-    @validates('location')
+    @validates('location', 'desciption')
     def validate_location(self, key, name):
         """
         Validates that 'location' attribute is a non-empty string at most 260 characters long.
@@ -59,17 +59,7 @@ class Near_miss(db.Model, SerializerMixin):
         Raises:
             ValueError: If the DateTime is in the future or if the report DateTime precedes the incident DateTime.
         """
-                
-        if not isinstance(value, db.Datetime):
-            raise TypeError(f'{key} must be a DateTime object')
-        now = db.DateTime.now()
-
-
-        if value > now:
-            raise TypeError(f'{key} cannot be set in the future')
-        
-        if key.startswith('report'):
-            # Creates a DateTime object that combines the report_time with a default date. 
-            near_miss_datetime = value + Time(0, 0, 0)
+        validates_model_input_datetime(self, key, value)
+        return value
 
 
