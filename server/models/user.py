@@ -3,6 +3,7 @@ from sqlalchemy.orm import validates, relationship
 from sqlalchemy.ext.hybrid import hybrid_property
 from config import db, bcrypt
 from models.model_helpers import MAX_NAME_LENGTH, MAX_EMAIL_LENGTH, validate_model_input_string
+from sqlalchemy import ForeignKey
 
 print('Testing')
 
@@ -22,11 +23,15 @@ class User(db.Model, SerializerMixin):
 
     # Foreign keys
 
-    # one to one 
-    company = relationship('Company', back_populates='user_id', uselist=False)
+    # ✅ Company (currently one to one, but should be one company to many users.) 
+    company_id = db.COlumn(db.Integer, ForeignKey('companies.id'))
+    company = relationship('Company', back_populates='users')
 
-    # one to many
-    incidents = relationship('Incident', back_populates='incident_id')
+    # Incidents (one user to many incidents)
+    incidents = relationship('Incident', back_populates='users')
+
+
+    near_missess = relationship('Near_miss', back_populates="users")
 
     _password_hash = db.Column(db.String, nullable=False)
     
@@ -106,7 +111,7 @@ class User(db.Model, SerializerMixin):
     
     @password_hash.setter
     def password_hash(self, password):
-        """Sets a new password for user and rehashes it.
+        """Sets a new password for user and rehashes it. 
 
         Args:
             password (str): the new password.
