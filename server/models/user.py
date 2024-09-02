@@ -23,14 +23,14 @@ class User(db.Model, SerializerMixin):
 
     # Foreign keys
 
-    # ✅ Company (currently one to one, but should be one company to many users.) 
-    company_id = db.COlumn(db.Integer, ForeignKey('companies.id'))
+    # ✅ Company (one company to many users) 
+    company_id = db.Column(db.Integer, ForeignKey('companies.id'))
     company = relationship('Company', back_populates='users')
 
-    # Incidents (one user to many incidents)
+    # ✅ Incidents (one user to many incidents)
     incidents = relationship('Incident', back_populates='users')
 
-
+    # Near Missses (one user to many near misses)
     near_missess = relationship('Near_miss', back_populates="users")
 
     _password_hash = db.Column(db.String, nullable=False)
