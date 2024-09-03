@@ -38,10 +38,9 @@ class Incident(db.Model, SerializerMixin):
     
     # Foreign Keys: 
      
-    # user_id: one to many
-
+    # ✅ user_id (one user to many incidents)
     user_id = db.Column(db.Integer, ForeignKey('users.id'))
-    user = relationship('User', back_populates='users')
+    user = relationship('User', back_populates='incidents')
     
     # employee_id: one to many
 

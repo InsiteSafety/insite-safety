@@ -22,10 +22,13 @@ class Near_miss(db.Model, SerializerMixin):
     location = db.Column(db.String, nullable=False)
     description = db.Column(db.String(MAX_INPUT_LENGTH), nullable=False)
 
-    #Foreign Relationships
-        # 1. reported_by_user_id (one user can report many nm)
-        # 2. root_cause_analysis_id (one rca to one near miss)
-        # 3. corrective_action_id (many corrective actions to one near_miss)
+    # 1. reported_by_user_id (one user can report many nm)
+    user_id = db.Column(db.Integer, ForeignKey('users.id'))
+    user = relationship("User", back_populates="near_misses")
+
+    # 2. root_cause_analysis_id (one rca to one near miss)
+        
+    # 3. corrective_action_id (many corrective actions to one near_miss)
 
     @validates('location', 'desciption')
     def validate_location(self, key, name):

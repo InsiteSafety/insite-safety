@@ -16,9 +16,10 @@ class Company(db.Model, SerializerMixin):
     name = db.Column(db.String(MAX_NAME_LENGTH), nullable=False)
     address = db.Column(db.String(MAX_INPUT_LENGTH), nullable=False)
     user_id = db.Column(db.Integer, ForeignKey('users.id'))
+
+    # ✅ Foreign Keys (many users to one company)
     user = relationship("User", back_populates="companies")
     
-    # Foreign Keys
     # industry_id: 
 
 
