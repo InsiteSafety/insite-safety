@@ -24,7 +24,11 @@ class Near_miss(db.Model, SerializerMixin):
 
     # 1. reported_by_user_id (one user can report many nm)
     user_id = db.Column(db.Integer, ForeignKey('users.id'))
-    user = relationship("User", back_populates="near_misses")
+    user = relationship('User', back_populates="near_misses")
+
+    # 2. Near Miss (one comapny with many near misses)
+    company_id = db.Column(db.Integer, ForeignKey('companies.id'))
+    company = relationship('Company', back_populates='companies')
 
     # 2. root_cause_analysis_id (one rca to one near miss)
         

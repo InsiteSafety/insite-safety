@@ -22,6 +22,8 @@ class Company(db.Model, SerializerMixin):
     
     # industry_id: 
 
+    # ✅ Company (many near misses to one company)
+    near_misses = relationship('Near_miss', back_populates='companies')
 
     # inspection_id?
     

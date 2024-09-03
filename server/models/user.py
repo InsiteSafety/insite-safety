@@ -30,7 +30,7 @@ class User(db.Model, SerializerMixin):
     # ✅ Incidents (one user to many incidents)
     incidents = relationship('Incident', back_populates='users')
 
-    # Near Missses (one user to many near misses)
+    # ✅ Near Missses (many near misses to one user)
     near_missess = relationship('Near_miss', back_populates="users")
 
     _password_hash = db.Column(db.String, nullable=False)
