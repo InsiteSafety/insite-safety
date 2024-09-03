@@ -1,24 +1,30 @@
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.orm import validates
 from datetime import datetime
+from sqlalchemy import Column, Integer, String, ForeignKey, Time
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 
 from config import db
-from model_helpers import MAX_NAME_LENGTH, validate_model_input_string, MAX_INPUT_LENGTH
+from models.model_helpers import MAX_NAME_LENGTH, validate_model_input_string, MAX_INPUT_LENGTH, validates_model_input_datetime
 
 # Validations To Do
 # incident_date, incident_time, incident_report_date, incident_report_time
 
 
 class Incident(db.Model, SerializerMixin):
+    """
+    TODO
+    """
 
     __tablename__ = 'incidents'
 
     id = db.Column(db.Integer, primary_key=True)
     injury_description = db.Column(db.String(MAX_INPUT_LENGTH))
-    incident_date = db.Column(db.datetime, nullable=False)
-    incident_time = db.Column(db.datetime, nullable=False)
-    incident_report_date = db.Column(db.datetime, nullable=False)
-    incident_report_time = db.Column(db.datetime, nullable=False)
+    incident_date = db.Column(db.DateTime, nullable=False)
+    incident_time = db.Column(db.DateTime, nullable=False)
+    report_date = db.Column(db.DateTime, nullable=False)
+    report_time = db.Column(db.DateTime, nullable=False)
     mechansim_of_injury = db.Column(db.String(MAX_INPUT_LENGTH), nullable=False)
     body_part_injured = db.Column(db.String(MAX_INPUT_LENGTH), nullable=False)
     symptoms = db.Column(db.String(MAX_INPUT_LENGTH), nullable=False)
@@ -28,13 +34,27 @@ class Incident(db.Model, SerializerMixin):
     first_aid_given = db.Column(db.Boolean, nullable=False)
     first_aid_details = db.Column(db.String(MAX_INPUT_LENGTH), nullable=False)
     recovery_status = db.Column(db.String(MAX_INPUT_LENGTH), nullable=False)
-    pain_level = db.Column(db.Integer(2))
+    pain_level = db.Column(db.Integer())
+    
+    # Foreign Keys: 
+     
+    # ✅ user_id (one user to many incidents)
+    user_id = db.Column(db.Integer, ForeignKey('users.id'))
+    user = relationship('User', back_populates='incidents')
+    
+    # ✅ employee_id: one to many
+
+    employee_id = db.Column(db.Integer, ForeignKey('employees.id'))
+    employee = relationship('Employee', back_populates='incidents')
+
+    # medical records 
+    # company_id
     # Pain level constrant disallowing more than two characters. Validations will ensure users can only choose vlaues between 0 and 10. 
 
     @validates('injury_description', 'mechanism_of_injury', 'body_part_injured', 'symptoms', 'incident_location', 'first_aid_details', 'recovery_status')
     def validate_name(self, key, name):
         """
-        Validates that the injury_description', 'mechanism_of_injury', 'body_part_injured', 'symptoms', 'incident_location', 'first_aid_details', 'recovery_status' attributes are all non-empty strings that are at most 260 characters long.
+        Validates that the 'injury_description', 'mechanism_of_injury', 'body_part_injured', 'symptoms', 'incident_location', 'first_aid_details', 'recovery_status' attributes are all non-empty strings that are at most 260 characters long.
 
         Args:
             key (str): the attribute name.
@@ -81,45 +101,22 @@ class Incident(db.Model, SerializerMixin):
             raise ValueError(f'{key} must be between zero and ten')
         return value
     
-    @validates('incident_date', 'incident_time', 'incident_report_date', 'incident_report_time')
-    def validate_datetime_fields(self, key, value):
+    @validates('incident_date', 'incident_time', 'report_date', 'report_time')
+    def validate_DateTime_fields(self, key, value):
         """
-        Validates that datetime fields are not set in the future and that
-        the report datetime is after the incident datetime.
+        Validates that DateTime fields are not set in the future and that
+        the report DateTime is after the incident DateTime.
 
         Args:
             key (str): The attribute name being validated.
-            value (datetime): The value of the attribute.
+            value (DateTime): The value of the attribute.
 
         Returns:
-            datetime: The validated value.
+            DateTime: The validated value.
 
         Raises:
-            ValueError: If the datetime is in the future or if the report datetime precedes the incident datetime.
+            ValueError: If the DateTime is in the future or if the report DateTime precedes the incident DateTime.
         """
-
-        if not isinstance(value, datetime):
-            raise TypeError(f'{key} must be a datetiem object')
-        now = datetime.now() 
-        if value > now: 
-            raise ValueError(f'{key} cannot be set in the future')
-        if key.startswith('incident_report') and hasattr(self, 'incident_date'):
-            incident_datetime = getattr(self, 'incident_date')
-            if value <= incident_datetime:
-                raise ValueError('Report datetime must be after incident datetime')
+        validates_model_input_datetime(self, key, value)
         return value
 
-
-
-    
-    
-    
-
-
-
-
-    # Foreign Keys
-    # user_id
-    # employee_id
-    # medical records 
-    # company_id

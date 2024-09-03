@@ -1,8 +1,9 @@
 from sqlalchemy_serializer import SerializerMixin
-from sqlalchemy.orm import validates
+from sqlalchemy.orm import validates, relationship
 from sqlalchemy.ext.hybrid import hybrid_property
 from config import db, bcrypt
-from server.models.model_helpers import MAX_NAME_LENGTH, MAX_EMAIL_LENGTH, validate_model_input_string
+from models.model_helpers import MAX_NAME_LENGTH, MAX_EMAIL_LENGTH, validate_model_input_string
+from sqlalchemy import ForeignKey
 
 print('Testing')
 
@@ -15,15 +16,23 @@ class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(MAX_NAME_LENGTH), nullale=False)
+    first_name = db.Column(db.String(MAX_NAME_LENGTH), nullable=False)
     last_name = db.Column(db.String(MAX_NAME_LENGTH), nullable=False)
     username = db.Column(db.String(MAX_NAME_LENGTH), nullable=False)
     email = db.Column(db.String(MAX_EMAIL_LENGTH), nullable=False)
 
-    # Foreign Keys
-    # user_role = db.Column(db.String)
-    # company
-    # incidents 
+    # Foreign keys
+
+    # ✅ Company (one company to many users) 
+    company_id = db.Column(db.Integer, ForeignKey('companies.id'))
+    company = relationship('Company', back_populates='users')
+
+    # ✅ Incidents (one user to many incidents)
+    incidents = relationship('Incident', back_populates='users')
+
+    # ✅ Near Missses (many near misses to one user)
+    near_missess = relationship('Near_miss', back_populates="users")
+
 
     _password_hash = db.Column(db.String, nullable=False)
     
@@ -103,7 +112,7 @@ class User(db.Model, SerializerMixin):
     
     @password_hash.setter
     def password_hash(self, password):
-        """Sets a new password for user and rehashes it.
+        """Sets a new password for user and rehashes it. 
 
         Args:
             password (str): the new password.

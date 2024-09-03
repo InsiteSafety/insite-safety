@@ -1,8 +1,9 @@
 from sqlalchemy_serializer import SerializerMixin
-from sqlalchemy.orm import validates
+from sqlalchemy.orm import validates, relationship
+from sqlalchemy import ForeignKey
 
 from config import db
-from model_helpers import MAX_NAME_LENGTH, validate_model_input_string
+from models.model_helpers import *
 
 class Employee(db.Model, SerializerMixin):
     """
@@ -14,12 +15,18 @@ class Employee(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(MAX_NAME_LENGTH), nullable=False)
     last_name = db.Column(db.String(MAX_NAME_LENGTH), nullable=False)
-    department = db.Column(db.String(MAX_NAME_LENGTH), nullable=False),
+    department = db.Column(db.String(MAX_NAME_LENGTH), nullable=False)
     position = db.Column(db.String(MAX_NAME_LENGTH), nullable=False)
     
     # Foreign Key
-    # incident_id
-    
+
+    # ✅ incident_id (one employee to many incidents)
+    incidents = relationship('Incident', back_populates='employees')
+
+    # ✅ company: one company with manys employees. 
+    company_id = db.Column(db.Integer, ForeignKey('companies.id'))
+    company = relationship('Company', back_populates='employees')
+
     @validates('first_name', 'last_name', 'department', 'position')
     def validate_name(self, key, name):
         """

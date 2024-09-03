@@ -2,13 +2,13 @@
 // CONSTANTS
 
 /** The location of the file: vite.config.js, starting from root. */
-const VITE_CONFIG_FILEPATH = "./vite.config.js";
+const VITE_CONFIG_FILEPATH = "./client/vite.config.js";
 
 /** The location of package.json, starting from root. */
-const PACKAGE_JSON_FILEPATH = "./package.json";
+const PACKAGE_JSON_FILEPATH = "./client/package.json";
 
 /** The location of helpers.js, starting from root. */
-const HELPERS_FILEPATH = "./src/helpers.js";
+const HELPERS_FILEPATH = "./client/src/helpers.js";
 
 /** The location of configType.txt, starting from root. */
 const CONFIG_TYPE_TXT_FILEPATH = "./configType.txt";
