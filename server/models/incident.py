@@ -45,6 +45,7 @@ class Incident(db.Model, SerializerMixin):
     # employee_id: one to many
 
     employee_id = db.Column(db.Integer, ForeignKey('employees.id'))
+    employee = db.Column(Integer, back_populates='incidents')
 
     # medical records 
     # company_id
