@@ -42,10 +42,10 @@ class Incident(db.Model, SerializerMixin):
     user_id = db.Column(db.Integer, ForeignKey('users.id'))
     user = relationship('User', back_populates='incidents')
     
-    # employee_id: one to many
+    # ✅ employee_id: one to many
 
     employee_id = db.Column(db.Integer, ForeignKey('employees.id'))
-    employee = db.Column(Integer, back_populates='incidents')
+    employee = relationship('Employee', back_populates='incidents')
 
     # medical records 
     # company_id
