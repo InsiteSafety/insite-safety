@@ -16,11 +16,19 @@ class Company(db.Model, SerializerMixin):
     name = db.Column(db.String(MAX_NAME_LENGTH), nullable=False)
     address = db.Column(db.String(MAX_INPUT_LENGTH), nullable=False)
     user_id = db.Column(db.Integer, ForeignKey('users.id'))
-    user = relationship("User", back_populates="companies")
+
+    # Foreign Keys 
     
-    # Foreign Keys
-    # industry_id
-    # insection_id
+    # Users (many users to one company)
+    users = relationship("User", back_populates="companies")
+    
+
+    # ✅ Company (many near misses to one company)
+    near_misses = relationship('Near_miss', back_populates='companies')
+    employees = relationship('Employee', back_populates='companies')
+
+    # inspection_id?
+    # industry_id: 
     
     def __repr__(self):
         pass

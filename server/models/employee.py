@@ -1,5 +1,6 @@
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.orm import validates, relationship
+from sqlalchemy import ForeignKey
 
 from config import db
 from models.model_helpers import *
@@ -19,10 +20,13 @@ class Employee(db.Model, SerializerMixin):
     
     # Foreign Key
 
-    # incident_id: one to many
-    incidents = relationship("Incident", back_populates="employees")
+    # ✅ incident_id (one employee to many incidents)
+    incidents = relationship('Incident', back_populates='employees')
 
-    
+    # ✅ company: one company with manys employees. 
+    company_id = db.Column(db.Integer, ForeignKey('companies.id'))
+    company = relationship('Company', back_populates='employees')
+
     @validates('first_name', 'last_name', 'department', 'position')
     def validate_name(self, key, name):
         """
