@@ -33,6 +33,7 @@ class User(db.Model, SerializerMixin):
     # ✅ Near Missses (many near misses to one user)
     near_missess = relationship('Near_miss', back_populates="users")
 
+
     _password_hash = db.Column(db.String, nullable=False)
     
     def __repr__(self):

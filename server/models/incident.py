@@ -120,15 +120,3 @@ class Incident(db.Model, SerializerMixin):
         validates_model_input_datetime(self, key, value)
         return value
 
-            
-
-
-
-
-    
-    
-    
-
-
-
-
