@@ -1,13 +1,11 @@
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.orm import validates
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, ForeignKey, Time
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
 from config import db
 from models.model_helpers import MAX_NAME_LENGTH, MAX_INPUT_LENGTH, validate_model_input_string, validates_model_input_datetime
 
-class Near_miss(db.Model, SerializerMixin):
+class NearMiss(db.Model, SerializerMixin):
     """
     TODO
     """ 
@@ -16,19 +14,19 @@ class Near_miss(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     report_date = db.Column(db.DateTime, nullable=False)
-    report_time = db.Colimn(db.DateTime, nullable=False)
+    report_time = db.Column(db.DateTime, nullable=False)
     near_miss_date = db.Column(db.DateTime, nullable=False) 
     near_miss_time = db.Column(db.DateTime, nullable=False) 
     location = db.Column(db.String, nullable=False)
     description = db.Column(db.String(MAX_INPUT_LENGTH), nullable=False)
 
     # 1. reported_by_user_id (one user can report many nm)
-    user_id = db.Column(db.Integer, ForeignKey('users.id'))
-    user = relationship('User', back_populates="near_misses")
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user = db.relationship('User', back_populates="near_misses")
 
     # 2. Near Miss (one comapny with many near misses)
-    company_id = db.Column(db.Integer, ForeignKey('companies.id'))
-    company = relationship('Company', back_populates='companies')
+    company_id = db.Column(db.Integer, db.ForeignKey('companies.id'))
+    company = db.relationship('Company', back_populates='companies')
 
     # 2. root_cause_analysis_id (one rca to one near miss)
         

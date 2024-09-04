@@ -1,9 +1,7 @@
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.orm import validates
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, ForeignKey, Time
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
 
 from config import db
 from models.model_helpers import MAX_NAME_LENGTH, validate_model_input_string, MAX_INPUT_LENGTH, validates_model_input_datetime
@@ -39,13 +37,13 @@ class Incident(db.Model, SerializerMixin):
     # Foreign Keys: 
      
     # ✅ user_id (one user to many incidents)
-    user_id = db.Column(db.Integer, ForeignKey('users.id'))
-    user = relationship('User', back_populates='incidents')
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user = db.relationship('User', back_populates='incidents')
     
     # ✅ employee_id: one to many
 
-    employee_id = db.Column(db.Integer, ForeignKey('employees.id'))
-    employee = relationship('Employee', back_populates='incidents')
+    employee_id = db.Column(db.Integer, db.ForeignKey('employees.id'))
+    employee = db.relationship('Employee', back_populates='incidents')
 
     # medical records 
     # company_id
