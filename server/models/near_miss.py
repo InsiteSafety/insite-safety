@@ -26,7 +26,7 @@ class NearMiss(db.Model, SerializerMixin):
 
     # 2. Near Miss (one comapny with many near misses)
     company_id = db.Column(db.Integer, db.ForeignKey('companies.id'))
-    company = db.relationship('Company', back_populates='companies')
+    company = db.relationship('Company', back_populates='near_misses')
 
     # 2. root_cause_analysis_id (one rca to one near miss)
         
