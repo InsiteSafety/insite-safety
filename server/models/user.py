@@ -1,9 +1,8 @@
 from sqlalchemy_serializer import SerializerMixin
-from sqlalchemy.orm import validates, relationship
+from sqlalchemy.orm import validates
 from sqlalchemy.ext.hybrid import hybrid_property
 from config import db, bcrypt
 from models.model_helpers import MAX_NAME_LENGTH, MAX_EMAIL_LENGTH, validate_model_input_string
-from sqlalchemy import ForeignKey
 
 print('Testing')
 
@@ -24,14 +23,14 @@ class User(db.Model, SerializerMixin):
     # Foreign keys
 
     # ✅ Company (one company to many users) 
-    company_id = db.Column(db.Integer, ForeignKey('companies.id'))
-    company = relationship('Company', back_populates='users')
+    company_id = db.Column(db.Integer, db.ForeignKey('companies.id'))
+    company = db.relationship('Company', back_populates='users')
 
     # ✅ Incidents (one user to many incidents)
-    incidents = relationship('Incident', back_populates='users')
+    incidents = db.relationship('Incident', back_populates='user')
 
     # ✅ Near Missses (many near misses to one user)
-    near_missess = relationship('Near_miss', back_populates="users")
+    near_misses = db.relationship('NearMiss', back_populates="user")
 
 
     _password_hash = db.Column(db.String, nullable=False)
