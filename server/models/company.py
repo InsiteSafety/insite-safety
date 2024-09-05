@@ -1,6 +1,5 @@
 from sqlalchemy_serializer import SerializerMixin
-from sqlalchemy.orm import validates, relationship
-from sqlalchemy import ForeignKey
+from sqlalchemy.orm import validates
 from models.user import User
 
 from config import db
@@ -15,17 +14,17 @@ class Company(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(MAX_NAME_LENGTH), nullable=False)
     address = db.Column(db.String(MAX_INPUT_LENGTH), nullable=False)
-    user_id = db.Column(db.Integer, ForeignKey('users.id'))
+    # user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     # Foreign Keys 
     
     # Users (many users to one company)
-    users = relationship("User", back_populates="companies")
+    users = db.relationship("User", back_populates="company")
     
 
     # ✅ Company (many near misses to one company)
-    near_misses = relationship('Near_miss', back_populates='companies')
-    employees = relationship('Employee', back_populates='companies')
+    near_misses = db.relationship('NearMiss', back_populates='company')
+    employees = db.relationship('Employee', back_populates='company')
 
     # inspection_id?
     # industry_id: 
